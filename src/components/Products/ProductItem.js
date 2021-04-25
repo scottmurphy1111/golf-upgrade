@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { stripHtml } from 'string-strip-html';
 import ProductOverlay from './ProductOverlay';
 
 const ProductItem = ({ product, onAddToCart, setProductId }) => {
@@ -37,10 +36,7 @@ const ProductItem = ({ product, onAddToCart, setProductId }) => {
       /> */}
       <>
         <div className="product__image">
-          <img
-            src={`${process.env.PUBLIC_URL}/blueprint-irons.png`}
-            alt={product.name}
-          />
+          <img src={product.media.source} alt={product.name} />
         </div>
         <div className="product__info">
           <h4 className="product__name">{product.name}</h4>
