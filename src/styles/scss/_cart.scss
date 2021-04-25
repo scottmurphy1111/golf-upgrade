@@ -1,0 +1,20 @@
+.cart {
+  color: #141414;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 100vh;
+  padding: 1.6rem;
+  background: #f4f4f4;
+  transition: all 0.25s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  &[data-active='true'] {
+    transform: translateX(0);
+  }
+  &[data-active='false'] {
+    transform: translateX(100%);
+  }
+}
