@@ -1,5 +1,6 @@
 import React from 'react';
 import CartItem from './CartItem';
+import { useHistory } from 'react-router-dom';
 
 const Cart = ({
   cart,
@@ -8,11 +9,18 @@ const Cart = ({
   onEmptyCart,
   isOpen,
   setIsOpen,
+  setCheckout,
 }) => {
-  console.log('cart items ', cart.total_unique_items);
+  let history = useHistory();
+
+  const goToCheckout = (e) => {
+    history.push(`/checkout/${cart.id}`);
+    localStorage.setItem('cart-id', cart.id);
+    setIsOpen(false);
+    setCheckout(true);
+  };
 
   const renderEmptyCart = () => {
-    console.log('cart empty');
     if (cart.total_unique_items > 0) {
       return;
     }
@@ -28,7 +36,6 @@ const Cart = ({
   };
 
   const renderCart = () => {
-    console.log('render cart');
     if (cart.total_unique_items === 0) {
       return;
     }
@@ -53,6 +60,7 @@ const Cart = ({
         <button className="cart__btn-empty" onClick={handleEmptyCart}>
           Empty cart
         </button>
+        <button onClick={goToCheckout}>Checkout</button>
         <button onClick={() => setIsOpen(!isOpen)}>Close Cart</button>
       </>
     );

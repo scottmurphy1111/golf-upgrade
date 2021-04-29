@@ -1,0 +1,15 @@
+.checkout-form-wrapper {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2.4rem;
+  box-sizing: border-box;
+}
+
+.checkout__form {
+  display: flex;
+  flex-direction: column;
+
+  > input,
+  select {
+    margin-bottom: 1.6rem;
+  }
+}

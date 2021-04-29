@@ -17,6 +17,8 @@
 .product__image {
   flex: 1 1 80%;
   margin-bottom: 1.6rem;
+  position: relative;
+  z-index: 2;
 
   img {
     width: 100%;
@@ -29,12 +31,14 @@
   flex: 1 1 20%;
 
   .product__price {
-    color: rgb(0, 161, 62);
+    font-weight: 600;
+    color: $mc_green;
   }
 }
 
 .product__overlay {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
@@ -51,6 +55,7 @@
 
   &[data-active='true'] {
     opacity: 1;
+    z-index: 3;
   }
 
   .product__btn {

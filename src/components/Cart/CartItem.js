@@ -13,7 +13,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
     <div className="cart-item">
       <img
         className="cart-item__image"
-        src={item.media.source}
+        src={`${process.env.PUBLIC_URL}/blueprint-irons.png`}
         alt={item.name}
       />
       <div className="cart-item__details">

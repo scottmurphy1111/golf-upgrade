@@ -7,8 +7,15 @@ const ProductsList = ({ products, onAddToCart }) => {
   const [productId, setProductId] = useState('');
   const [singleProduct, setSingleProduct] = useState({});
 
-  const fetchSingleProduct = (id) => {
-    commerce.products.retrieve(id).then((product) => setSingleProduct(product));
+  const fetchSingleProduct = async (id) => {
+    try {
+      const product = await commerce.products.retrieve(id);
+      setSingleProduct(product);
+    } catch (error) {
+      console.error(`Cannot get product ${id}`, error);
+    }
+
+    // commerce.products.retrieve(id).then((product) => setSingleProduct(product));
   };
 
   const handleProductSelect = (id) => {

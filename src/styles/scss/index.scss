@@ -1,8 +1,10 @@
 @import './grid';
+@import './vars';
 @import './header';
 @import './main';
 @import './products';
 @import './cart';
+@import './checkout';
 
 html {
   min-height: 100vh;

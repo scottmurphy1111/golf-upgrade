@@ -29,14 +29,13 @@ const ProductItem = ({ product, onAddToCart, setProductId }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* <img
-        className="product__image"
-        src={product.media.source}
-        alt={product.name}
-      /> */}
+      {/* product.media.source */}
       <>
         <div className="product__image">
-          <img src={product.media.source} alt={product.name} />
+          <img
+            src={`${process.env.PUBLIC_URL}/blueprint-irons.png`}
+            alt={product.name}
+          />
         </div>
         <div className="product__info">
           <h4 className="product__name">{product.name}</h4>
