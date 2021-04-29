@@ -1,5 +1,5 @@
-export const countries = [
-  { value: 'CA', text: 'Canada' },
-  { value: 'MX', text: 'Mexico' },
-  { value: 'US', text: 'United States' },
-];
+export const countries = {
+  CA: 'Canada',
+  MX: 'Mexico',
+  US: 'United States',
+};

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { commerce } from '../../lib/commerce';
-// import { countries } from '../../lib/Countries';
+import { countries } from '../../lib/Countries';
 
 const Checkout = ({ cart, setCheckout }) => {
   const [checkoutToken, setCheckoutToken] = useState({});
@@ -29,8 +29,8 @@ const Checkout = ({ cart, setCheckout }) => {
     shippingOption: '',
   });
 
-  const [cartId, setCartId] = useState('');
-  const [liveObject, setLiveObject] = useState();
+  // const [cartId, setCartId] = useState('');
+  // const [liveObject, setLiveObject] = useState();
 
   const params = useParams();
 
@@ -81,7 +81,7 @@ const Checkout = ({ cart, setCheckout }) => {
           region: stateProvince,
         }
       );
-      const shippingOption = (await options[0]) || null;
+      const shippingOption = await options[0];
       setFormState({
         ...formState,
         shippingOptions: options,
@@ -96,7 +96,7 @@ const Checkout = ({ cart, setCheckout }) => {
     setCheckoutToken(token);
   };
 
-  const handleShipping = () => {};
+  // const handleShipping = () => {};
 
   useEffect(() => {
     commerce.checkout
@@ -113,17 +113,40 @@ const Checkout = ({ cart, setCheckout }) => {
       });
   }, [params]);
 
-  useEffect(() => {
+  const handleFetchShippingCountriesRef = useRef();
+  const handleFetchSubDivisionsRef = useRef();
+  const handleFetchShippingOptionsRef = useRef();
+
+  const handleFetchShippingCountries = () => {
     fetchShippingCountries(checkoutToken.id);
-
+  };
+  const handleFetchSubDivisions = () => {
     fetchSubDivisions(formState.shippingCountry);
-
+  };
+  const handleFetchShippingOptions = () => {
     fetchShippingOptions(
       checkoutToken.id,
       formState.shippingCountry,
       formState.shippingStateProvince
     );
-  }, [checkoutToken]);
+  };
+  handleFetchShippingCountriesRef.current = handleFetchShippingCountries;
+  handleFetchSubDivisionsRef.current = handleFetchSubDivisions;
+  handleFetchShippingOptionsRef.current = handleFetchShippingOptions;
+
+  useEffect(() => {
+    handleFetchShippingCountriesRef.current();
+  }, [checkoutToken.id]);
+  useEffect(() => {
+    handleFetchSubDivisionsRef.current();
+  }, [formState.shippingCountry]);
+  useEffect(() => {
+    handleFetchShippingOptionsRef.current();
+  }, [
+    checkoutToken.id,
+    formState.shippingCountry,
+    formState.shippingStateProvince,
+  ]);
 
   console.log('cotoken', checkoutToken);
   console.log('cotoken', checkoutToken);
@@ -245,11 +268,11 @@ const Checkout = ({ cart, setCheckout }) => {
             className="checkout__select"
           >
             <option disabled>Country</option>
-            {/* {console.log(JSON.stringify(formState, null, 2))} */}
-            {Object.keys(formState.shippingCountries).map((index) => {
+            {console.log(JSON.stringify(formState, null, 2))}
+            {Object.keys(countries).map((index) => {
               return (
                 <option value={index} key={index}>
-                  {formState.shippingCountries[index]}
+                  {countries[index]}
                 </option>
               );
             })}

@@ -5,7 +5,7 @@ import Header from './components/Header/Header';
 import Main from './components/Main/Main';
 
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Switch, Route, PrivateRoute } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Checkout from './components/Checkout/Checkout';
 
 const App = () => {
