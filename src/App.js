@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { commerce } from './lib/commerce';
-import './styles/css/index.css';
-import Header from './components/Header/Header';
-import Main from './components/Main/Main';
+import { Route } from 'react-router-dom';
 
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
-import Checkout from './components/Checkout/Checkout';
+//Components
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import Main from './components/Main/Main';
+import PrivateRoute from './utils/PrivateRoute';
+import PrivateRouteReceipt from './utils/PrivateRouteReceipt';
+import CheckoutComplete from './components/Checkout/CheckoutComplete';
+import CheckoutContainer from './components/Checkout/CheckoutContainer';
 
 const App = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState({});
   const [checkout, setCheckout] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [receipt, setReceipt] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -81,7 +85,7 @@ const App = () => {
   }, [setCart]);
 
   return (
-    <Router>
+    <>
       <Header
         cart={cart}
         onUpdateCartQty={handleUpdateCartQty}
@@ -91,35 +95,48 @@ const App = () => {
         setCheckout={setCheckout}
       />
 
-      <Switch>
-        <Route
-          exact
-          path="/"
-          component={
-            loading
-              ? () => <span>isloading still</span>
-              : () => (
-                  <Main
-                    products={products}
-                    onAddToCart={handleAddToCart}
-                    setCheckout={setCheckout}
-                  />
-                )
-          }
-        />
-        {/* <PrivateRoute 
+      <Route
+        exact
+        path="/"
+        component={
+          loading
+            ? () => <span>isloading still</span>
+            : (props) => (
+                <Main
+                  {...props}
+                  products={products}
+                  onAddToCart={handleAddToCart}
+                  setCheckout={setCheckout}
+                />
+              )
+        }
+      />
+      {/* <PrivateRoute 
         need to add back*/}
-        <Route
-          exact
-          path={`/checkout/:id`}
-          component={
-            loading
-              ? () => <span>isloading still</span>
-              : () => <Checkout cart={cart} setCheckout={setCheckout} />
-          }
-        />
-      </Switch>
-    </Router>
+      <PrivateRoute
+        exact
+        path={`/checkout/:id`}
+        component={
+          loading
+            ? () => <span>isloading still</span>
+            : (props) => (
+                <CheckoutContainer
+                  {...props}
+                  cart={cart}
+                  setCheckout={setCheckout}
+                  setCart={setCart}
+                  setReceipt={setReceipt}
+                />
+              )
+        }
+      />
+      <PrivateRouteReceipt
+        component={CheckoutComplete}
+        path={`/order-complete/:checkoutToken/:orderId`}
+        setCheckout={setCheckout}
+      />
+      <Footer />
+    </>
   );
 };
 

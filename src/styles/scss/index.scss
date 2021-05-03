@@ -7,16 +7,19 @@
 @import './checkout';
 
 html {
-  min-height: 100vh;
+  height: 100%;
   font-family: 'Roboto', sans-serif;
   font-size: 62.5%;
-}
-body {
+  background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('../../assets/mc-bg.jpeg');
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1469%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='url(%23SvgjsLinearGradient1470)'%3e%3c/rect%3e%3cpath d='M175.27 570.9C383.67 550.52 516.35 109.78 873.39 108.09 1230.43 106.4 1392.32 269.42 1571.51 270.49' stroke='rgba(228%2c 235%2c 242%2c 0.1)' stroke-width='2'%3e%3c/path%3e%3cpath d='M620.81 671.07C753.68 592.96 684.28 139.67 926.1 135.44 1167.92 131.21 1374.12 355.94 1536.67 359.44' stroke='rgba(228%2c 235%2c 242%2c 0.1)' stroke-width='2'%3e%3c/path%3e%3cpath d='M412.07 640.89C554.32 589.33 498 165.99 785.15 164.32 1072.3 162.65 1336.96 380.49 1531.31 382.72' stroke='rgba(228%2c 235%2c 242%2c 0.1)' stroke-width='2'%3e%3c/path%3e%3cpath d='M678.12 634.04C825.61 595.91 875.63 196.11 1097.55 192.02 1319.47 187.93 1405.54 340.93 1516.98 343.22' stroke='rgba(228%2c 235%2c 242%2c 0.1)' stroke-width='2'%3e%3c/path%3e%3cpath d='M366.2 660.66C567.71 620.56 654.68 108.34 971.01 104.18 1287.33 100.02 1417.72 286.93 1575.81 288.98' stroke='rgba(228%2c 235%2c 242%2c 0.1)' stroke-width='2'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1469'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='84.72%25' y1='139.29%25' x2='15.28%25' y2='-39.29%25' gradientUnits='userSpaceOnUse' id='SvgjsLinearGradient1470'%3e%3cstop stop-color='rgba(14%2c 47%2c 71%2c 0.37)' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(0%2c 158%2c 108%2c 1)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e");
+}
+body {
+  min-height: 100%;
   font-weight: 400;
   font-size: 2.4rem;
+  background-color: transparent;
 }
 
 h1,

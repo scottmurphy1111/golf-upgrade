@@ -1,14 +1,29 @@
 .main {
-  background: rgba(255, 255, 255, 0.8);
+  // background: rgba(255, 255, 255, 0.8);
   padding: 2.4rem;
   box-sizing: border-box;
 
   h1 {
     margin-bottom: 1.6rem;
     font-size: 64px;
+    color: #fff;
   }
 
   h2 {
     margin-bottom: 1.6rem;
+    color: #fff;
+  }
+
+  .main-container {
+    display: flex;
+  }
+  .side-panel-container {
+    flex: 1 1 20%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .products-container {
+    flex: 1 1 80%;
   }
 }

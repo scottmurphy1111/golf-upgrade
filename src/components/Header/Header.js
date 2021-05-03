@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Cart from '../Cart/Cart';
 import { Link } from 'react-router-dom';
+import { Form, Input } from 'semantic-ui-react';
 
 const Header = ({
   cart,
@@ -31,7 +32,23 @@ const Header = ({
         <div className="logo">
           <Link to="/"></Link>
         </div>
-        <nav>
+        <div className="cart-container">
+          <Form>
+            <Input icon="search" size="huge" placeholder="Search..." />
+          </Form>
+          <div
+            className={`cart-item ${
+              cart.total_unique_items ? 'has-items' : ''
+            }`}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="cart-icon"></div>
+            {cart.total_unique_items ? (
+              <span className="cart-count">{cart.total_unique_items}</span>
+            ) : null}
+          </div>
+        </div>
+        {/* <nav>
           <ul>
             <li>Apparel</li>
             <li>Shoes</li>
@@ -50,7 +67,7 @@ const Header = ({
               ) : null}
             </li>
           </ul>
-        </nav>
+        </nav> */}
       </header>
       {cart.id && (
         <Cart
