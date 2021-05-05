@@ -53,6 +53,7 @@ const CheckoutContainer = (props) => {
   }, [props, isMountedRef]);
 
   const getShippingOptions = async (countrySymbol, region = null) => {
+    console.log('get shipping options fired', countrySymbol, region);
     if (countrySymbol) {
       try {
         if (countrySymbol === 'US') {

@@ -13,7 +13,12 @@ import { monthOptions, yearOptions } from '../../utils/cardOptions';
 import { canada } from '../../utils/canada';
 import { stateOptions } from '../../utils/stateOptions';
 
-const CheckoutForm = (props) => {
+const CheckoutForm = ({
+  tokenId,
+  getShippingOptions,
+  shipOption,
+  setReceipt,
+}) => {
   const { register, handleSubmit, errors, control, reset } = useForm();
 
   // console.log('errors  ', errors);
@@ -75,13 +80,11 @@ const CheckoutForm = (props) => {
 
   //   setLineItems(lineItems);
   // }, []);
-
   useEffect(() => {
-    console.log('shipppppppp cccccsh', shipCountry);
-    if (isMountedRef.current) {
-      props.getShippingOptions(shipCountry);
-    }
-  }, [isMountedRef, props]);
+    // const handleGetShippingOptions = (country) => {
+    getShippingOptions(shipCountry);
+    // };
+  }, [shipCountry]);
 
   const getCountryInfoShipping = () => {
     if (shipCountry === 'CA') return canada;
@@ -105,7 +108,7 @@ const CheckoutForm = (props) => {
     final.line_items = lineItems;
 
     final.fulfillment = {
-      shipping_method: props.shipOption,
+      shipping_method: shipOption,
     };
 
     final.customer = {
@@ -157,14 +160,14 @@ const CheckoutForm = (props) => {
           },
         };
 
-        if (props.shipOption) {
+        if (shipOption) {
           try {
-            const res = await commerce.checkout.capture(props.tokenId, final);
+            const res = await commerce.checkout.capture(tokenId, final);
 
             console.log('res from capturing checkout stripe', res);
-            props.setReceipt(res);
+            setReceipt(res);
             localStorage.removeItem('cart-id');
-            history.push(`/order-complete/${props.tokenId}/${res.id}`);
+            history.push(`/order-complete/${tokenId}/${res.id}`);
             setProcessing(false);
           } catch (error) {
             window.alert(error.data.error.message);
@@ -186,14 +189,14 @@ const CheckoutForm = (props) => {
         },
       };
 
-      if (props.shipOption) {
+      if (shipOption) {
         try {
-          const res = await commerce.checkout.capture(props.tokenId, final);
+          const res = await commerce.checkout.capture(tokenId, final);
           console.log(res, 'res from CAPTURING CHECKOUT!!! (TEST-GATEWAY)');
-          props.setReceipt(res);
+          setReceipt(res);
           localStorage.removeItem('cart-id');
           localStorage.setItem('receipt', JSON.stringify(res));
-          history.push(`/order-complete/${props.tokenId}/${res.id}`);
+          history.push(`/order-complete/${tokenId}/${res.id}`);
           setProcessing(false);
         } catch (error) {
           window.alert(error.data.error.message);
@@ -275,7 +278,6 @@ const CheckoutForm = (props) => {
                 console.log('e', e);
                 setShipCountry(e[1].value);
                 console.log('shipe country  ', shipCountry);
-                props.setShipOption(false);
                 reset({
                   county_state: '',
                 });
@@ -304,8 +306,6 @@ const CheckoutForm = (props) => {
               error={errors.town_city && errors.town_city.message}
             />
             <Controller
-              // defaultValue={'AL'}
-              defaultValue={stateOptions[0].value}
               width={6}
               label="County/State/Province/Territory"
               placeholder="Search ..."

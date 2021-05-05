@@ -27,7 +27,7 @@ const Header = ({
   // }, []);
 
   return (
-    <div className="header">
+    <div className="header-container">
       <header>
         <div className="logo">
           <Link to="/"></Link>

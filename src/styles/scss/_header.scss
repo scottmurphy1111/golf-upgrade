@@ -1,4 +1,4 @@
-.header {
+.header-container {
   display: flex;
   flex-wrap: nowrap;
   height: 132px;
@@ -73,29 +73,29 @@
       }
     }
   }
-}
 
-nav {
-  flex: 1 1 1000px;
-}
-ul {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  justify-content: space-between;
-  align-items: center;
+  nav {
+    flex: 1 1 1000px;
+  }
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
 
-  li {
-    cursor: pointer;
-    font-size: 2rem;
+    li {
+      cursor: pointer;
+      font-size: 2rem;
 
-    &:hover {
-      //todo fix margin, not on last li
-      border-bottom: 4px solid $mc_gold;
-    }
+      &:hover {
+        //todo fix margin, not on last li
+        border-bottom: 4px solid $mc_gold;
+      }
 
-    .cart-li {
+      .cart-li {
+      }
     }
   }
 }
