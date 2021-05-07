@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { commerce } from '../../lib/commerce';
-import useIsMountedRef from '../../utils/useIsMountedRef';
+import useIsMountedRef from '../../hooks/useIsMountedRef';
 
 import CheckoutForm from './CheckoutForm';
 import CheckoutItems from './CheckoutItems';

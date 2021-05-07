@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { commerce } from './lib/commerce';
 import { Route, useHistory } from 'react-router-dom';
 
@@ -13,6 +13,15 @@ import CheckoutContainer from './components/Checkout/CheckoutContainer';
 import ProductPage from './components/Products/ProductPage';
 import ProductsList from './components/Products/ProductsList';
 import Home from './components/Home/Home';
+import Breadcrumbs from './components/Breadcrumbs/Breadcrumbs';
+import { AppContext, initContext } from './state/AppContext';
+
+function reducer(state, action) {
+  console.log('state wass', state);
+  console.log('action', action);
+  const { type, payload } = action;
+  return { payload };
+}
 
 const App = () => {
   const [cart, setCart] = useState({});
@@ -24,6 +33,9 @@ const App = () => {
   const [singleProduct, setSingleProduct] = useState({});
   const [categories, setCategories] = useState([]);
   const [categoryView, setCategoryView] = useState(null);
+  const [productName, setProductName] = useState(null);
+  // const [breadcrumbs, setBreadcrumbs] = useState(['shop']);
+  const [breadcrumbs, dispatch] = useReducer(reducer, ['shop']);
 
   const history = useHistory();
 
@@ -55,9 +67,9 @@ const App = () => {
           console.error(`Cannot get product ${productId}`, error);
         });
 
-      // return () => {
-      //   localStorage.removeItem('product-id');
-      // };
+      return () => {
+        localStorage.removeItem('product-id');
+      };
     }
   }, []);
 
@@ -131,12 +143,13 @@ const App = () => {
     history.push(`/products/${slug}`);
   };
 
+  const handleBreadcrumbs = () => {};
   useEffect(() => {
     fetchCart();
   }, [setCart]);
 
   return (
-    <>
+    <AppContext.Provider value={initContext}>
       <Header
         cart={cart}
         onUpdateCartQty={handleUpdateCartQty}
@@ -144,6 +157,13 @@ const App = () => {
         onEmptyCart={handleEmptyCart}
         checkout={checkout}
         setCheckout={setCheckout}
+      />
+      <Breadcrumbs
+        product={singleProduct}
+        category={categoryView}
+        checkout={checkout}
+        productName={productName}
+        breadcrumbs={breadcrumbs}
       />
       <Main setCheckout={setCheckout} />
       <div className="main-container container">
@@ -159,6 +179,7 @@ const App = () => {
                     categories={categories}
                     setCategories={setCategories}
                     setCategoryView={handleCategorySelect}
+                    setBreadcrumbs={handleBreadcrumbs}
                   />
                 )
           }
@@ -175,6 +196,8 @@ const App = () => {
                     products={products}
                     setSingleProduct={setSingleProduct}
                     categories={categories}
+                    setProductName={setProductName}
+                    setBreadcrumbs={dispatch}
                   />
                 )
           }
@@ -192,6 +215,7 @@ const App = () => {
                     product={singleProduct}
                     onAddToCart={handleAddToCart}
                     onUpdateCartQty={handleUpdateCartQty}
+                    setBreadcrumbs={dispatch}
                   />
                 )
           }
@@ -213,6 +237,7 @@ const App = () => {
                   setCheckout={setCheckout}
                   setCart={setCart}
                   setReceipt={setReceipt}
+                  setBreadcrumbs={dispatch}
                 />
               )
         }
@@ -223,7 +248,7 @@ const App = () => {
         setCheckout={setCheckout}
       />
       <Footer />
-    </>
+    </AppContext.Provider>
   );
 };
 

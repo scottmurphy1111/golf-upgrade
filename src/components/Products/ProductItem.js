@@ -9,19 +9,18 @@ const ProductItem = ({
   onAddToCart,
   setProductId,
   setSingleProduct,
+  setProductName,
 }) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   let history = useHistory();
 
   const { result } = stripHtml(product.description);
-  // console.log('result', result);
-
-  // console.log('product', product);
 
   const handleClick = (product) => {
     window.scrollTo(0, 0);
     setSingleProduct(product);
+    setProductName(product.name);
     localStorage.setItem('product-id', product.id);
     history.push(`/product/${product.id}`);
   };

@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from 'react';
+import useIsMountedRef from '../../hooks/useIsMountedRef';
+import { AppContext } from '../../state/AppContext';
 
-const Home = ({ categories, setCategoryView }) => {
+const Home = ({ categories, setCategoryView, setBreadcrumbs }) => {
   const [loading, setLoading] = useState(true);
   const [orderedCats, setOrderedCats] = useState();
+
+  useEffect(() => {
+    setBreadcrumbs(['shop']);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const order = {
       0: 'Shop All',
