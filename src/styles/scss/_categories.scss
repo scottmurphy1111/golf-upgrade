@@ -2,13 +2,16 @@
   margin-bottom: 1.6rem;
   ul {
     display: flex;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+
     align-items: center;
     list-style: none;
 
     li {
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       font-size: 1.6rem;
+      margin: 0 1.6rem 0.8rem 0;
+      cursor: pointer;
     }
   }
 }

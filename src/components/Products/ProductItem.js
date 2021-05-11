@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { stripHtml } from 'string-strip-html';
-import ProductOverlay from './ProductOverlay';
 import { commerce } from '../../lib/commerce';
 import { useHistory } from 'react-router-dom';
+import { useStore } from '../../state/store';
 
 const ProductItem = ({
   product,
   onAddToCart,
   setProductId,
-  setSingleProduct,
+
   setProductName,
 }) => {
+  const setProduct = useStore((state) => state.setProduct);
+
   const [showOverlay, setShowOverlay] = useState(false);
 
   let history = useHistory();
@@ -19,7 +21,7 @@ const ProductItem = ({
 
   const handleClick = (product) => {
     window.scrollTo(0, 0);
-    setSingleProduct(product);
+    setProduct(product);
     setProductName(product.name);
     localStorage.setItem('product-id', product.id);
     history.push(`/product/${product.id}`);
@@ -35,18 +37,6 @@ const ProductItem = ({
   const handleMouseLeave = () => {
     setShowOverlay(false);
   };
-
-  // useEffect(() => {
-
-  console.log('fetching product');
-  // fetchSingleProduct(product.id);
-  // }, [history, product.id, setSingleProduct]);
-
-  // const handleProductDetails = (id) => {
-  //   console.log('id', id);
-  //   setViewingProduct(true);
-  //   setProductId(id);
-  // };
 
   return (
     <div
@@ -88,13 +78,6 @@ const ProductItem = ({
           Product Details
         </button>
       </div>
-
-      {/* <ProductOverlay
-        showOverlay={showOverlay}
-        id={product.id}
-        setProductId={setProductId}
-        onAddToCart={handleAddToCart}
-      /> */}
     </div>
   );
 };

@@ -29,9 +29,10 @@ const Header = ({
   return (
     <div className="header-container">
       <header>
-        <div className="logo">
-          <Link to="/"></Link>
-        </div>
+        <div
+          className="logo"
+          onClick={() => (window.location.href = '/')}
+        ></div>
         <div className="cart-container">
           <Form>
             <Input icon="search" size="huge" placeholder="Search..." />

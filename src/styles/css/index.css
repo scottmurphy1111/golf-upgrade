@@ -152,6 +152,18 @@ template {
   margin: 0 auto;
   padding: 0 2.4rem 4.8rem; }
 
+.breadcrumbs-container {
+  padding: 1.6rem 2.4rem; }
+  .breadcrumbs-container ul {
+    display: flex; }
+    .breadcrumbs-container ul li,
+    .breadcrumbs-container ul span {
+      text-transform: capitalize; }
+  .breadcrumbs-container .carot:after {
+    content: '>';
+    margin-left: 0.8rem;
+    margin-right: 0.8rem; }
+
 .header-container {
   display: flex;
   flex-wrap: nowrap;
@@ -169,16 +181,17 @@ template {
   .header-container .logo {
     width: 99px;
     height: 99px;
-    flex: 1 1 30%;
+    flex: 1 1 99px;
     display: inline-block;
     background: url(../../assets/white-bg-mc-logo.jpeg) no-repeat;
-    background-size: contain; }
+    background-size: contain;
+    cursor: pointer; }
     .header-container .logo a {
       display: block;
       height: 100%; }
   .header-container .cart-container {
     display: flex;
-    flex: 1 1 70%;
+    flex: 1 1 calc(100% - 99px);
     justify-content: flex-end;
     align-items: center; }
     .header-container .cart-container form {
@@ -223,7 +236,7 @@ template {
         border-bottom: 4px solid #a2854f; }
 
 .main {
-  padding: 2.4rem;
+  padding: 0 2.4rem 2.4rem;
   box-sizing: border-box; }
   .main h1 {
     margin-bottom: 1.6rem;
@@ -246,7 +259,8 @@ template {
 
 .home-container h2 {
   font-size: 2rem;
-  color: #a2854f; }
+  color: #a2854f;
+  margin-bottom: 1.6rem; }
 
 .home-container ul {
   display: grid;
@@ -261,7 +275,7 @@ template {
     padding: 1.6rem;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    background-size: cover;
+    background-size: 75%;
     position: relative;
     padding-bottom: 56.25%; }
     .home-container ul li .category__content {
@@ -346,7 +360,10 @@ template {
     z-index: 3; }
 
 .product-page__wrapper {
-  display: flex; }
+  display: flex;
+  padding: 2.4rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px; }
   .product-page__wrapper .image-viewer {
     flex: 1 1 60%;
     display: flex;
@@ -442,12 +459,14 @@ template {
   margin-bottom: 1.6rem; }
   .categories-container ul {
     display: flex;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
     align-items: center;
     list-style: none; }
     .categories-container ul li {
-      flex: 1 1 auto;
-      font-size: 1.6rem; }
+      flex: 0 1 auto;
+      font-size: 1.6rem;
+      margin: 0 1.6rem 0.8rem 0;
+      cursor: pointer; }
 
 .checkout-form-wrapper {
   background: rgba(255, 255, 255, 0.8);

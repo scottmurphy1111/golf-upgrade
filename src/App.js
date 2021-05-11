@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { commerce } from './lib/commerce';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 //Components
 import Header from './components/Header/Header';
@@ -11,39 +11,38 @@ import PrivateRouteReceipt from './utils/PrivateRouteReceipt';
 import CheckoutComplete from './components/Checkout/CheckoutComplete';
 import CheckoutContainer from './components/Checkout/CheckoutContainer';
 import ProductPage from './components/Products/ProductPage';
-import ProductsList from './components/Products/ProductsList';
 import Home from './components/Home/Home';
 import Breadcrumbs from './components/Breadcrumbs/Breadcrumbs';
-import { AppContext, initContext } from './state/AppContext';
-
-function reducer(state, action) {
-  console.log('state wass', state);
-  console.log('action', action);
-  const { type, payload } = action;
-  return { payload };
-}
+import { useStore } from './state/store';
+import ProductsContainer from './components/Products/ProductsContainer';
+import Categories from './components/Categories/Categories';
+import shallow from 'zustand/shallow';
 
 const App = () => {
+  const products = useStore(useCallback((state) => state.products, []));
+  const setProducts = useStore((state) => state.setProducts);
+
+  const product = useStore((state) => state.product);
+  const setProduct = useStore((state) => state.setProduct);
+
+  const categories = useStore((state) => state.categories, shallow);
+  const setCategories = useStore((state) => state.setCategories);
+
   const [cart, setCart] = useState({});
   const [checkout, setCheckout] = useState(false);
   const [loading, setLoading] = useState(true);
   const [receipt, setReceipt] = useState(null);
-  const [products, setProducts] = useState([]);
   const [productId, setProductId] = useState(null);
-  const [singleProduct, setSingleProduct] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [categoryView, setCategoryView] = useState(null);
+
   const [productName, setProductName] = useState(null);
-  // const [breadcrumbs, setBreadcrumbs] = useState(['shop']);
-  const [breadcrumbs, dispatch] = useReducer(reducer, ['shop']);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filterCategorySlugs, setFilterCategorySlugs] = useState([]);
 
-  const history = useHistory();
-
+  //fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const { data } = await commerce.products.list();
-        console.log('data', data);
         setProducts(data);
         setLoading(false);
       } catch (error) {
@@ -51,42 +50,66 @@ const App = () => {
       }
     };
     fetchProducts();
-  }, []);
+  }, [setProducts]);
+  console.log('useStorye', useStore());
 
+  //fetch single product
   useEffect(() => {
-    console.log('firing fsp');
-    const productId = localStorage.getItem('product-id');
-    if (productId) {
+    const pId = localStorage.getItem('product-id');
+    if (pId) {
       commerce.products
-        .retrieve(productId)
-        .then((product) => {
-          setSingleProduct(product);
+        .retrieve(pId)
+        .then((res) => {
+          setProduct(res);
         })
 
         .catch((error) => {
-          console.error(`Cannot get product ${productId}`, error);
+          console.error(`Cannot get product ${pId}`, error);
         });
 
       return () => {
         localStorage.removeItem('product-id');
       };
     }
-  }, []);
+  }, [setProduct]);
 
+  //fetch cats
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await commerce.categories.list();
+        const { data } = await commerce.categories.list();
 
-        console.log('res', res);
-        setCategories(res.data);
+        const catData = data.map((category) => ({
+          ...category,
+          active: false,
+        }));
+        setCategories(catData);
       } catch (error) {
-        console.log('There was an error fetching categories');
+        console.log('There was an error fetching categories', error);
       }
     };
 
     fetchCategories();
-  }, []);
+  }, [setCategories]);
+
+  // fetch products by categories
+  useEffect(() => {
+    const fetchProductsByCategory = async (slugs = []) => {
+      console.log('passed slugs', slugs);
+      try {
+        const { data } = await commerce.products.list({
+          category_slug: slugs,
+        });
+
+        setFilteredProducts(data);
+        // setProducts(res.data);
+      } catch (error) {
+        console.log('There was an error fetch products by categories', error);
+      }
+    };
+
+    fetchProductsByCategory(filterCategorySlugs);
+  }, [filterCategorySlugs]);
 
   const fetchCart = async () => {
     try {
@@ -98,8 +121,6 @@ const App = () => {
   };
 
   const handleAddToCart = async (productId, quantity) => {
-    console.log('fired');
-    console.log('pid', productId, quantity);
     try {
       const { cart } = await commerce.cart.add(productId, quantity);
       setCart(cart);
@@ -138,18 +159,20 @@ const App = () => {
     }
   };
 
-  const handleCategorySelect = (slug) => {
-    setCategoryView(slug);
-    history.push(`/products/${slug}`);
+  const handleSetFilteredProducts = (slug) => {
+    if (!filterCategorySlugs.includes(slug)) {
+      setFilterCategorySlugs([...filterCategorySlugs, slug]);
+    } else {
+      setFilterCategorySlugs(filterCategorySlugs.filter((cat) => cat !== slug));
+    }
   };
 
-  const handleBreadcrumbs = () => {};
   useEffect(() => {
     fetchCart();
   }, [setCart]);
 
   return (
-    <AppContext.Provider value={initContext}>
+    <>
       <Header
         cart={cart}
         onUpdateCartQty={handleUpdateCartQty}
@@ -158,97 +181,114 @@ const App = () => {
         checkout={checkout}
         setCheckout={setCheckout}
       />
-      <Breadcrumbs
-        product={singleProduct}
-        category={categoryView}
-        checkout={checkout}
-        productName={productName}
-        breadcrumbs={breadcrumbs}
-      />
-      <Main setCheckout={setCheckout} />
-      <div className="main-container container">
-        <Route
-          exact
-          path="/"
-          component={
-            loading
-              ? () => <span>loading</span>
-              : (props) => (
-                  <Home
-                    {...props}
-                    categories={categories}
-                    setCategories={setCategories}
-                    setCategoryView={handleCategorySelect}
-                    setBreadcrumbs={handleBreadcrumbs}
-                  />
-                )
-          }
-        />
-        <Route
-          exact
-          path="/products/:slug"
-          component={
-            loading
-              ? () => <span>loading</span>
-              : (props) => (
-                  <ProductsList
-                    {...props}
-                    products={products}
-                    setSingleProduct={setSingleProduct}
-                    categories={categories}
-                    setProductName={setProductName}
-                    setBreadcrumbs={dispatch}
-                  />
-                )
-          }
-        />
-
-        <Route
-          exact
-          path={`/product/:id`}
-          component={
-            loading
-              ? () => <span>loading...</span>
-              : (props) => (
-                  <ProductPage
-                    {...props}
-                    product={singleProduct}
-                    onAddToCart={handleAddToCart}
-                    onUpdateCartQty={handleUpdateCartQty}
-                    setBreadcrumbs={dispatch}
-                  />
-                )
-          }
-        />
-      </div>
-
-      {/* <PrivateRoute 
-        need to add back*/}
-      <PrivateRoute
-        exact
-        path={`/checkout/:id`}
-        component={
-          loading
-            ? () => <span>isloading still</span>
-            : (props) => (
-                <CheckoutContainer
-                  {...props}
-                  cart={cart}
-                  setCheckout={setCheckout}
-                  setCart={setCart}
-                  setReceipt={setReceipt}
-                  setBreadcrumbs={dispatch}
-                />
-              )
-        }
-      />
-      <PrivateRouteReceipt
-        component={CheckoutComplete}
-        path={`/order-complete/:checkoutToken/:orderId`}
+      <Breadcrumbs productName={productName} />
+      <Main
         setCheckout={setCheckout}
+        categories={categories}
+        handleSetFilterCategorySlugs={handleSetFilteredProducts}
+        filterCategorySlugs={filterCategorySlugs}
+        setFilteredProducts={setFilteredProducts}
       />
+      <div className="main-container container">
+        <Route exact path="/products/*" component={(props) => <Categories />} />
+        <Switch>
+          <Route
+            exact
+            path="/products"
+            component={
+              loading
+                ? () => <span>loading</span>
+                : (props) => (
+                    <>
+                      <ProductsContainer
+                        {...props}
+                        products={products}
+                        setProduct={setProduct}
+                        categories={categories}
+                        setProductName={setProductName}
+                        handleSetFilterCategorySlugs={handleSetFilteredProducts}
+                        filterCategorySlugs={filterCategorySlugs}
+                        setFilteredProducts={setFilteredProducts}
+                      />
+                    </>
+                  )
+            }
+          />
+          <Route
+            exact
+            path="/products/:slug"
+            component={
+              loading
+                ? () => <span>loading</span>
+                : (props) => (
+                    <>
+                      <ProductsContainer
+                        {...props}
+                        products={filteredProducts}
+                        setProduct={setProduct}
+                        categories={categories}
+                        setProductName={setProductName}
+                        handleSetFilterCategorySlugs={handleSetFilteredProducts}
+                        filterCategorySlugs={filterCategorySlugs}
+                        setFilteredProducts={setFilteredProducts}
+                      />
+                    </>
+                  )
+            }
+          />
+
+          <Route
+            exact
+            path={`/product/:id`}
+            component={
+              loading
+                ? () => <span>loading...</span>
+                : (props) => (
+                    <ProductPage
+                      {...props}
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      onUpdateCartQty={handleUpdateCartQty}
+                    />
+                  )
+            }
+          />
+
+          <PrivateRoute
+            exact
+            path={`/checkout/:id`}
+            component={
+              loading
+                ? () => <span>isloading still</span>
+                : (props) => (
+                    <CheckoutContainer
+                      {...props}
+                      cart={cart}
+                      setCheckout={setCheckout}
+                      setCart={setCart}
+                      setReceipt={setReceipt}
+                    />
+                  )
+            }
+          />
+          <PrivateRouteReceipt
+            component={CheckoutComplete}
+            path={`/order-complete/:checkoutToken/:orderId`}
+            setCheckout={setCheckout}
+          />
+          <Route
+            exact
+            path="/*"
+            component={
+              loading
+                ? () => <span>loading</span>
+                : (props) => <Home {...props} />
+            }
+          />
+        </Switch>
+      </div>
       <Footer />
-    </AppContext.Provider>
+    </>
   );
 };
 

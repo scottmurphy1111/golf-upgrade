@@ -1,0 +1,20 @@
+.breadcrumbs-container {
+  padding: 1.6rem 2.4rem;
+
+  ul {
+    display: flex;
+
+    li,
+    span {
+      text-transform: capitalize;
+    }
+  }
+
+  .carot {
+    &:after {
+      content: '>';
+      margin-left: 0.8rem;
+      margin-right: 0.8rem;
+    }
+  }
+}

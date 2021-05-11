@@ -18,10 +18,11 @@
   .logo {
     width: 99px;
     height: 99px;
-    flex: 1 1 30%;
+    flex: 1 1 99px;
     display: inline-block;
     background: url(../../assets/white-bg-mc-logo.jpeg) no-repeat;
     background-size: contain;
+    cursor: pointer;
 
     a {
       display: block;
@@ -31,7 +32,7 @@
 
   .cart-container {
     display: flex;
-    flex: 1 1 70%;
+    flex: 1 1 calc(100% - 99px);
     justify-content: flex-end;
     align-items: center;
 

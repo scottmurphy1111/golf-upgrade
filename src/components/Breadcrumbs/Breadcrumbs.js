@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
-import { AppContext } from '../../state/AppContext';
 
-const Breadcrumbs = ({ category, productName, checkout }) => {
-  console.log('productName', productName);
+const Breadcrumbs = ({ productName }) => {
   const [breadcrumbs, setBreadcrumbs] = useState(null);
   const isMountedRef = useIsMountedRef();
   const location = useLocation();
@@ -12,35 +10,40 @@ const Breadcrumbs = ({ category, productName, checkout }) => {
   useEffect(() => {
     function handleBreadcrumbsUpdate() {
       let createBreadcrumbs;
-      // console.log('pathname change 🍕', location);
       const pathname = location.pathname;
       if (pathname && pathname.includes('products')) {
         createBreadcrumbs = pathname.split('/').splice(1, 2);
-        setBreadcrumbs(() => ['shop', ...createBreadcrumbs]);
+        setBreadcrumbs(() => ['Golf Shop', ...createBreadcrumbs]);
       } else if (pathname && pathname.includes('prod_')) {
         createBreadcrumbs = pathname.split('/').splice(1, 1);
-        createBreadcrumbs.push(productName.replaceAll(' ', '-'));
-        setBreadcrumbs(() => ['shop', ...createBreadcrumbs]);
+        createBreadcrumbs.push(productName);
+        setBreadcrumbs(() => ['Golf Shop', ...createBreadcrumbs]);
       } else {
-        setBreadcrumbs(() => ['shop']);
+        setBreadcrumbs(() => ['']);
       }
     }
 
     if (isMountedRef.current) {
       handleBreadcrumbsUpdate();
     }
-  }, [location, isMountedRef]);
+  }, [location, isMountedRef, productName]);
 
-  console.log('breadcrumbs in component ', breadcrumbs);
   return (
-    <div>
-      {breadcrumbs &&
-        breadcrumbs.length &&
-        breadcrumbs.map((item, i) => (
-          <Link key={i} to={`/${item}`}>
-            {item}
-          </Link>
-        ))}
+    <div className="breadcrumbs-container">
+      <ul>
+        {breadcrumbs && breadcrumbs.length === 1 && <span>golf shop</span>}
+        {breadcrumbs &&
+          breadcrumbs.length &&
+          breadcrumbs.map((item, i) =>
+            breadcrumbs.length === i + 1 ? (
+              <span key={i}>{item}</span>
+            ) : (
+              <li key={i} className="carot">
+                <Link to={`/${item}`}>{item}</Link>
+              </li>
+            )
+          )}
+      </ul>
     </div>
   );
 };
