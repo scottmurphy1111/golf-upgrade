@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { stripHtml } from 'string-strip-html';
 import { commerce } from '../../lib/commerce';
 import { useHistory } from 'react-router-dom';
-import { useStore } from '../../state/store';
+import { useProductsStore } from '../../store/ProductsStore';
 
 const ProductItem = ({
   product,
@@ -11,7 +11,7 @@ const ProductItem = ({
 
   setProductName,
 }) => {
-  const setProduct = useStore((state) => state.setProduct);
+  const setProduct = useProductsStore((state) => state.setProduct);
 
   const [showOverlay, setShowOverlay] = useState(false);
 

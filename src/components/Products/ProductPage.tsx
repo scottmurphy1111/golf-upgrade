@@ -4,10 +4,10 @@ import { stripHtml } from 'string-strip-html';
 import { Button, Form, Icon, Input } from 'semantic-ui-react';
 import { CHEC_BASE_URL, HEADERS } from '../../utils/constants';
 import axios from 'axios';
-import { useStore } from '../../state/store';
+import { useProductsStore } from '../../store/ProductsStore';
 
 const ProductPage = ({ onAddToCart, onUpdateCartQty }) => {
-  const product = useStore(useCallback((state) => state.product, []));
+  const product = useProductsStore(useCallback((state) => state.product, []));
 
   console.log('product', product);
   const [loading, setLoading] = useState(true);

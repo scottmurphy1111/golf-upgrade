@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useStore } from '../../state/store';
+import { useProductsStore } from '../../store/ProductsStore';
 import { cats, catTypes } from '../../utils/cats';
 import CategoryItem from './CategoryItem';
 
 const Categories = () => {
-  const categories = useStore((state) => state.categories);
-  const selectedCats = useStore((state) => state.selectedCats);
+  const categories = useProductsStore((state) => state.categories);
+  const selectedCats = useProductsStore((state) => state.selectedCats);
 
   const location = useLocation();
 

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 
-const Breadcrumbs = ({ productName }) => {
-  const [breadcrumbs, setBreadcrumbs] = useState(null);
+const Breadcrumbs = ({ productName }: any) => {
+  const [breadcrumbs, setBreadcrumbs] = useState<String[] | null>(null);
   const isMountedRef = useIsMountedRef();
   const location = useLocation();
 
   useEffect(() => {
     function handleBreadcrumbsUpdate() {
-      let createBreadcrumbs;
+      let createBreadcrumbs: String[];
       const pathname = location.pathname;
       if (pathname && pathname.includes('products')) {
         createBreadcrumbs = pathname.split('/').splice(1, 2);
